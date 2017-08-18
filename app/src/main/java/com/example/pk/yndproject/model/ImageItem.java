@@ -5,8 +5,6 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-
 /**
  * Created by PK on 17.08.2017.
  */
@@ -102,10 +100,6 @@ public class ImageItem implements Parcelable {
             this.postUrl = postUrl;
         }
 
-    private String mAuthor;
-    private String mUrl;
-    private String mImageSize;
-
     @Override
     public int describeContents() {
         return 0;
@@ -113,9 +107,11 @@ public class ImageItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(mAuthor);
-        parcel.writeString(mImageSize);
-        parcel.writeString(mUrl);
+        parcel.writeInt(id);
+        parcel.writeString(author);
+        parcel.writeInt(width);
+        parcel.writeInt(height);
+
     }
 
     public static final Creator<ImageItem> CREATOR = new Creator<ImageItem>() {
@@ -131,9 +127,9 @@ public class ImageItem implements Parcelable {
     };
 
     public ImageItem(Parcel in) {
-        mUrl = in.readString();
-        mAuthor = in.readString();
-        mImageSize = in.readString();
-
+        id = in.readInt();
+        author = in.readString();
+        width = in.readInt();
+        height = in.readInt();
     }
 }
