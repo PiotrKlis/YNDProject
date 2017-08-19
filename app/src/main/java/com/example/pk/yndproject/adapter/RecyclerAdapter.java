@@ -30,8 +30,9 @@ import java.util.Map;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageHolder> {
     public static ArrayList<String> authorArray = new ArrayList<>();
-    private ArrayList<ImageItem> mImages;
+    public static ArrayList<ImageItem> mImages;
     private static String TAG = "RecyclerAdapter";
+    int currentPosition;
 
     public RecyclerAdapter(ArrayList<ImageItem> images) {
         mImages = images;
@@ -49,6 +50,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageH
 
     @Override
     public void onBindViewHolder(RecyclerAdapter.ImageHolder holder, int position) {
+
         ImageItem imageItem = mImages.get(position);
         holder.mImgView.setVisibility(View.GONE);
         holder.mProgressBar.setVisibility(View.VISIBLE);
@@ -68,7 +70,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageH
         private ImageItem mImageItem;
         private ProgressBar mProgressBar;
 
-        private static final String IMAGE_KEY = "IMAGE";
 
         public ImageHolder(View v) {
             super(v);
@@ -80,11 +81,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageH
             v.setOnClickListener(this);
         }
 
+        private static final String IMAGE_KEY = "IMAGE";
+        private static final String POSITION_KEY = "POSITION";
+
         @Override
         public void onClick(View view) {
             Context context = itemView.getContext();
             Intent showPhotoIntent = new Intent(context, DetailActivity.class);
-            showPhotoIntent.putExtra(IMAGE_KEY, mImageItem);
+            showPhotoIntent.putParcelableArrayListExtra(IMAGE_KEY, mImages);
+            showPhotoIntent.putExtra(POSITION_KEY, getAdapterPosition());
             context.startActivity(showPhotoIntent);
         }
 
@@ -104,6 +109,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageH
 
                         @Override
                         public void onError() {
+                            mProgressBar.setVisibility(View.GONE);
                             Log.i("RecyclerAdapter", "Error in bindPhoto method");
                         }
                     });
@@ -113,7 +119,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageH
 
             if (!author.matches(".*\\d+.*")) {
                 imageItem.setAuthor(author + " " + Collections.frequency(authorArray, author));
-
             }
 
             mTxtView.setText(imageItem.getAuthor());

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.pk.yndproject.adapter.RecyclerAdapter;
 import com.example.pk.yndproject.http.RetrofitInterface;
@@ -50,13 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<ArrayList<ImageItem>> call, Throwable t) {
+                        Toast.makeText(MainActivity.this, "Wystąpił problem z połączeniem", Toast.LENGTH_SHORT).show();
                         Log.d("MainActivity", call.request().toString());
                     }
                 });
             }
         });
-
     }
-
-
 }
