@@ -1,9 +1,6 @@
 package com.example.pk.yndproject;
 
 import android.os.AsyncTask;
-import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,22 +10,27 @@ import com.example.pk.yndproject.adapter.RecyclerAdapter;
 import com.example.pk.yndproject.http.RetrofitInterface;
 import com.example.pk.yndproject.model.ImageItem;
 
+import junit.framework.Assert;
+
+import org.junit.Test;
+
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+import static org.junit.Assert.*;
 
-    String TAG = "MainActivity";
-    RecyclerAdapter recyclerAdapter;
-    RecyclerView.LayoutManager mLayoutManager;
+/**
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ */
+public class RetrofitTest {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    @Test
+    public void isDataResponseFromApi() {
 
         AsyncTask.execute(new Runnable() {
             @Override
@@ -39,19 +41,16 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback<ArrayList<ImageItem>>() {
                     @Override
                     public void onResponse(Call<ArrayList<ImageItem>> call, Response<ArrayList<ImageItem>> response) {
-                        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        recyclerAdapter = new RecyclerAdapter(response.body());
-                        recyclerView.setAdapter(recyclerAdapter);
+                        Assert.assertNotNull(response.body());
                     }
 
                     @Override
                     public void onFailure(Call<ArrayList<ImageItem>> call, Throwable t) {
-                        Toast.makeText(MainActivity.this, "Wystąpił problem z połączeniem", Toast.LENGTH_SHORT).show();
-                        Log.d("MainActivity", call.request().toString());
+
                     }
                 });
             }
         });
+
     }
 }

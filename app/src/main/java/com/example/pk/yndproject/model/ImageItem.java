@@ -11,6 +11,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class ImageItem implements Parcelable {
 
+    public ImageItem() {}
+
     @SerializedName("format")
         @Expose
         private String format;
@@ -126,7 +128,7 @@ public class ImageItem implements Parcelable {
         }
     };
 
-    public ImageItem(Parcel in) {
+    private ImageItem(Parcel in) {
         id = in.readInt();
         author = in.readString();
         width = in.readInt();

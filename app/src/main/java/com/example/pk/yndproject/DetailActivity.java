@@ -32,18 +32,11 @@ public class DetailActivity extends AppCompatActivity{
     private static final String IMAGE_KEY = "IMAGE";
     private static final String POSITION_KEY = "POSITION";
     private static final String TAG = "DetailActivity";
-    public ProgressBar progressBar;
-    PhotoView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        imageView = (PhotoView) findViewById(R.id.img_detail);
-        TextView txtAuthor = (TextView) findViewById(R.id.txt_author);
-        TextView txtImageSize = (TextView) findViewById(R.id.txt_img_size);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar_detail);
 
         ArrayList<ImageItem> imageItemArray = getIntent().getParcelableArrayListExtra(IMAGE_KEY);
         int position = getIntent().getIntExtra(POSITION_KEY, 0);
@@ -54,30 +47,13 @@ public class DetailActivity extends AppCompatActivity{
         ViewPager mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(position);
-
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
     }
 
     public void fullScreen() {
 
-        int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
+        int uiOptions = this.getWindow().getDecorView().getSystemUiVisibility();
         int newUiOptions = uiOptions;
+
         boolean isImmersiveModeEnabled =
                 ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
         if (isImmersiveModeEnabled) {
@@ -91,18 +67,19 @@ public class DetailActivity extends AppCompatActivity{
             newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
         }
 
-        if (Build.VERSION.SDK_INT >= 18) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        if (Build.VERSION.SDK_INT >= 19) {
+            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         }
 
-        getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+        this.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         ArrayList<ImageItem> imageItems = new ArrayList<>();
 
-        public SectionsPagerAdapter(FragmentManager fragmentManager, ArrayList<ImageItem> imageItems) {
+        SectionsPagerAdapter(FragmentManager fragmentManager, ArrayList<ImageItem> imageItems) {
             super(fragmentManager);
             this.imageItems = imageItems;
         }
@@ -123,10 +100,7 @@ public class DetailActivity extends AppCompatActivity{
     }
 
     public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
+
         int id;
         int width;
         int height;
@@ -146,10 +120,6 @@ public class DetailActivity extends AppCompatActivity{
             this.id = args.getInt(ARG_ID);
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static PlaceholderFragment newInstance(int width, int height, String author, int id) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();

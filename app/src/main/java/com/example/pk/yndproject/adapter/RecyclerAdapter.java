@@ -2,6 +2,7 @@ package com.example.pk.yndproject.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,10 +30,9 @@ import java.util.Map;
  */
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageHolder> {
-    public static ArrayList<String> authorArray = new ArrayList<>();
-    public static ArrayList<ImageItem> mImages;
+    private static ArrayList<String> authorArray = new ArrayList<>();
+    private static ArrayList<ImageItem> mImages;
     private static String TAG = "RecyclerAdapter";
-    int currentPosition;
 
     public RecyclerAdapter(ArrayList<ImageItem> images) {
         mImages = images;
@@ -63,15 +63,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageH
        return mImages.size();
     }
 
-    public static class ImageHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+     static class ImageHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView mImgView;
         private TextView mTxtView;
-        private ImageItem mImageItem;
         private ProgressBar mProgressBar;
 
-
-        public ImageHolder(View v) {
+         ImageHolder(View v) {
             super(v);
 
             mImgView = (ImageView) v.findViewById(R.id.img_recycler);
@@ -93,9 +91,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageH
             context.startActivity(showPhotoIntent);
         }
 
-        public void bindPhoto(ImageItem imageItem) {
+        void bindPhoto(ImageItem imageItem) {
 
-            mImageItem = imageItem;
             String imgUrl = "https://unsplash.it/100/50?image=" + imageItem.getId();
             Picasso.with(mImgView.getContext())
                     .load(imgUrl)
@@ -115,7 +112,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ImageH
                     });
 
             String author = imageItem.getAuthor();
+
+            // Populate the array with authors
+
             authorArray.add(author);
+
+            // Check if there's number inside the string
+            // if not, use setter to update the data
+            // add space and number of frequency of given author in an array
 
             if (!author.matches(".*\\d+.*")) {
                 imageItem.setAuthor(author + " " + Collections.frequency(authorArray, author));
